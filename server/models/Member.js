@@ -12,9 +12,13 @@ name: {
     trim: true,
     lowercase: true,
   },
+  password: {
+    type: String,
+    required: [true, "Password is Required"]},
   phone: {
     type: String,
     trim: true,
+    required: true,
   },
   profileImage: {
     type: String, 
@@ -22,6 +26,7 @@ name: {
   enrollmentNumber: {
     type: String, 
     trim: true,
+    required: true,
   },
   role: {
     type: String,
