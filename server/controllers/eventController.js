@@ -5,6 +5,7 @@ export const getUpcomingEvents = async (req, res) => {
      const events = await Event.find({
       startDate: { $gte: new Date() },
       status: { $in: ["Upcoming", "Ongoing"] },
+      isDeleted: false
     }).sort({ startDate: 1 });
     res.status(200).json({ success: true, events });
   } catch (error) {
@@ -27,6 +28,7 @@ export const getPastEvents = async (req, res) => {
         { startDate: { $lt: new Date() }, endDate: { $exists: false } },
       ],
       status: "Completed",
+      isDeleted: false
     }).sort({ startDate: -1 });
     res.status(200).json({ success: true, events });
   } catch (error) {
@@ -42,9 +44,9 @@ export const getPastEvents = async (req, res) => {
 
 
 
-export const getAllEvents = async (req, res) => {
+export const getOngoingEvents = async (req, res) => {
   try {
-    const events = (await Event.find()).sort({createdAt: -1});
+    const events = await Event.find({ status: "Ongoing", isDeleted: false }).sort({createdAt: -1}).lean();
     res.status(200).json({ success: true, events });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -71,8 +73,11 @@ export const getEventById = async (req, res) => {
         success: false,
         message: "Event not found",
       });
-    res.status(200).json({ success: true, event });
     }
+    if(event.isDeleted){
+      return res.status(409).json({success: false, message: "Event is deleted or it is no live"});
+    }
+    res.status(200).json({ success: true, event, message: "Event found successfull" });
   } catch (error) {
     console.error("Get event by ID error:", error);
     if (error.name === "CastError") {
@@ -84,6 +89,18 @@ export const getEventById = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
 
 export const createEvent = async (req, res) => {
   try {
@@ -150,9 +167,26 @@ export const createEvent = async (req, res) => {
   }
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const updateEvent = async (req, res) => {
   try {
-    const event = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const eventId = req.params.id;
+    if (!eventId.match(/^[0-9a-fA-F]{24}$/)) {
+    return res.status(400).json({ success: false, message: "Invalid event ID" });
+    }
+    const event = await Event.findByIdAndUpdate(eventId, req.body, { new: true, runValidators: true });
     if (!event) return res.status(404).json({ success: false, message: "Event not found" });
     res.status(200).json({ success: true, event });
   } catch (error) {
@@ -160,12 +194,54 @@ export const updateEvent = async (req, res) => {
   }
 };
 
+
+
+
+
+
+
+
+
+
+
+
 export const deleteEvent = async (req, res) => {
   try {
-    const event = await Event.findByIdAndDelete(req.params.id);
-    if (!event) return res.status(404).json({ success: false, message: "Event not found" });
+    const eventId = req.params.id;
+    if(!eventId){
+      return res.status(400).json({ success: false, message: "Invalid event ID" });
+    }
+    const event = await Event.findById(eventId);
+    if(!event){
+      return res.status(404).json({ success: false, message: "Event not found" });
+    }
+    event.isDeleted = true;
+    event.deletedAt = new Date();
+    await event.save();
     res.status(200).json({ success: true, message: "Event deleted successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+
+
+
+export const getDeletedEvent = async (req, res) => {
+   try {
+       const events = await Event.find({ isDeleted: true })
+      .sort({ deletedAt: -1 }) // Optional: sort by deletion time if you track it
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+      if(!events.length){
+        return res.status(404).json({ success: false, message: "No deleted events found" });
+      }
+
+     res.status(200).json({ success: true, events });
+   } catch (error) {
+    console.log(error);
+    res.status(500).json({success: false, message: error.message});
+   }
+}

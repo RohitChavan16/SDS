@@ -1,11 +1,12 @@
 import express from "express";
 import adminMiddleware from "../middleware/adminMiddleware.js";
-import { addMember, deleteMember, getAllMembers, getMemberById, getMembersByRole, updateMember } from "../controllers/memberController.js";
+import { addMember, deleteMember, getAllActiveMember, getAllMembers, getMemberById, getMembersByRole, updateMember } from "../controllers/memberController.js";
 
 
 const memberRouter = express.Router();
 
 memberRouter.get("/", getAllMembers);
+memberRouter.get("/active", getAllActiveMember);
 memberRouter.get("/role/:role", getMembersByRole);
 memberRouter.get("/:id", getMemberById);
 

@@ -12,6 +12,7 @@ name: {
     trim: true,
     lowercase: true,
   },
+  
   password: {
     type: String,
     required: [true, "Password is Required"]},
@@ -19,6 +20,13 @@ name: {
     type: String,
     trim: true,
     required: true,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  bio : {
+    type: String
   },
   profileImage: {
     type: String, 
