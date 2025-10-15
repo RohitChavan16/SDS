@@ -12,7 +12,6 @@ name: {
     trim: true,
     lowercase: true,
   },
-  
   password: {
     type: String,
     required: [true, "Password is Required"]},
@@ -43,6 +42,15 @@ name: {
   },
   designation: {
     type: String, 
+  },
+  AddedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Member",
+    required: true,
+  },
+  DeletedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Member",
   },
   year: {
     type: String, 

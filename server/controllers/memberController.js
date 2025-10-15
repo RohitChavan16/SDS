@@ -131,6 +131,7 @@ export const addMember = async (req, res) => {
       designation,
       permissions,
       password: hashedPassword,
+      AddedBy: req.user._id
     });
 
     await member.save();
@@ -207,7 +208,7 @@ export const deleteMember = async (req, res) => {
     
     const member = await Member.findByIdAndUpdate(
       id,
-      { isActive: false, leftAt: Date.now() },
+      { isActive: false, leftAt: Date.now(), DeletedBy: req.user._id },
       { new: true }
     );
 

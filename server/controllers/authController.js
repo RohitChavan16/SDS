@@ -7,7 +7,7 @@ import transporter from "../config/nodemailer.js";
 import VerifyOtp from "../models/VerifyOtp.js";
 
 export const register = async (req, res) => {
-  const {name, email, password, userType, notificationsEnabled, isAccountVerified, profileImage, role, designation, year, enrollmentNumber, phone} = req.body;
+  const {name, email, password, userType, notificationsEnabled, isAccountVerified, profileImage, role, designation, year, enrollmentNumber, phone, addedBy} = req.body;
 
 if(!name || !email || !password || !userType){
 return res.json({success: false, message: 'Missing Details'});
@@ -33,10 +33,16 @@ const user = new User({name, email, password: hashedPassword, notificationsEnabl
 await user.save();
 ID = user._id;
 } else if(userType === "Member"){
-  if(!enrollmentNumber && !phone){
+  if(!enrollmentNumber && !phone && !addedBy){
     return res.json({success: false, message: 'Missing Details'});
   }
-const member = new Member({name, email, password: hashedPassword, enrollmentNumber, phone, role, designation, year, joinedAt: new Date()}); 
+
+  const checkAddedByMember = await Member.find({enrollmentNumber: addedBy});
+  if(!checkAddedByMember){
+    return res.json({success: false, message: "Check the referals enrollment no."});
+  }
+
+const member = new Member({name, email, password: hashedPassword, enrollmentNumber, phone, role, designation, year, joinedAt: new Date(), AddedBy: checkAddedByMember._id }); 
 await member.save();
 ID = member._id;
 }
@@ -305,6 +311,15 @@ export const sendResetOtp = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error in sendResetOtp", error: error.message });
   }
 };
+
+
+
+
+
+
+
+
+
 
 export const resetPassword = async (req, res) => {
   const { email, otp, newPassword } = req.body;

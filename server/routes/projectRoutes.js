@@ -1,11 +1,12 @@
 import express from "express";
 import adminMiddleware from "../middleware/adminMiddleware.js";
-import { addProject, deleteProject, getAllProjects, getProjectById, toggleVisibility, updateProject } from "../controllers/projectController.js";
+import { addProject, deleteProject, getAllDeactiveProjects, getAllProjects, getProjectById, toggleVisibility, updateProject } from "../controllers/projectController.js";
 
 const projectRouter = express.Router();
 
 
 projectRouter.get("/", getAllProjects);
+projectRouter.get("/de-active", adminMiddleware, getAllDeactiveProjects);
 projectRouter.get("/:id", getProjectById);
 
 

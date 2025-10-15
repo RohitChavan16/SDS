@@ -7,6 +7,7 @@ import memberRouter from "./routes/memberRoutes.js";
 import projectRouter from "./routes/projectRoutes.js";
 import reportRouter from "./routes/reportRoutes.js";
 import { connectDB } from "./config/db.js";
+import facultyRouter from "./routes/facultyRoutes.js";
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/api/event', eventRouter);
 app.use('/api/member', memberRouter);
 app.use('/api/project', projectRouter);
 app.use('/api/report', reportRouter);
+app.use('/api/faculty', facultyRouter);
 
 await connectDB();
 const PORT = process.env.PORT;
