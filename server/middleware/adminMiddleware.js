@@ -17,7 +17,10 @@ try {
       return res.status(401).json({ message: "Only club member can add" });
     }
     if(!member.permissions.canManageMembers){
-      return res.status(403).json({ message: "You dont have permission to add new member" });
+      return res.status(403).json({ message: "You dont have permission manage member" });
+    }
+    if(!member.isActive){
+      return res.status(403).json({ message: "You dont have permission manage member" });
     }
     req.user = member; 
     next(); 

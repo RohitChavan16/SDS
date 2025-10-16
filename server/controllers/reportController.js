@@ -67,3 +67,15 @@ export const downloadReport = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const facultyAction = async (req, res) => {
+    try {
+       const { action } = req.body;
+       const id = req.params.id;
+       const report = await Report.findByIdAndUpdate(id, {status: action});
+       if (!report) return res.status(404).json({ success: false, message: "Report not found" });
+       res.status(200).json({ success: true, message: "Done" });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+}

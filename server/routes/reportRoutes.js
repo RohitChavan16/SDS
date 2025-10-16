@@ -1,7 +1,7 @@
 import express from "express";
 import adminMiddleware from "../middleware/adminMiddleware.js";
 import facultyMiddleware from "../middleware/facultyMiddleware.js";
-import { deleteReport, downloadReport, getAllReports, getReportById, shareReportWithAdvisor, updateReport, uploadReport } from "../controllers/reportController.js";
+import { deleteReport, downloadReport, facultyAction, getAllReports, getReportById, shareReportWithAdvisor, updateReport, uploadReport } from "../controllers/reportController.js";
 
 const reportRouter = express.Router();
 
@@ -12,8 +12,9 @@ reportRouter.delete("/:id", adminMiddleware, deleteReport);
 reportRouter.put("/:id", adminMiddleware, updateReport);
 reportRouter.post("/:id/share", adminMiddleware, shareReportWithAdvisor);
 
-reportRouter.get("/faculty", facultyMiddleware, getAllReports);
-reportRouter.get("/faculty/:id/download", facultyMiddleware, downloadReport);
+reportRouter.get("/check-report", facultyMiddleware, getAllReports);
+reportRouter.get("/faculty-action/:id", facultyMiddleware, facultyAction);
+reportRouter.get("download/:id", downloadReport);
 
 
 reportRouter.get("/:id", getReportById);
