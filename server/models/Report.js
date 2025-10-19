@@ -20,7 +20,7 @@ const reportSchema = new mongoose.Schema({
   visibleTo: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Member",
     },
   ],
     fileUrl: {
