@@ -8,6 +8,7 @@ Our members work on diverse projects, explore emerging technologies, and collabo
 This website is built to showcase our initiatives, achievements, and the incredible community driving innovation forward.
 
 📸 Screenshots 📷🎥
+<img width="1231" height="902" alt="Screenshot 2025-10-21 113410" src="https://github.com/user-attachments/assets/49b072ee-1dbf-4a38-b8ae-7d04022aaa68" />
 
                                             🌴🎄🌳🌲 ⭐💖 - Home - 💖⭐ 🌲🌳🎄🌴
 
